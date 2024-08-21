@@ -1,0 +1,240 @@
+<html><head><base href="https://cybertool-arsenal.com"><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>CyberTool Arsenal</title>
+<style>
+    body {
+        font-family: 'Roboto', sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #0a0a0a;
+        color: #00ff41;
+        overflow-x: hidden;
+    }
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    header {
+        text-align: center;
+        padding: 40px 0;
+        background: linear-gradient(45deg, #00ff41, #00b8ff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    h1 {
+        font-size: 3em;
+        margin-bottom: 10px;
+    }
+    .tool-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin-top: 40px;
+    }
+    .tool-card {
+        background-color: rgba(0, 255, 65, 0.1);
+        border: 1px solid #00ff41;
+        border-radius: 8px;
+        padding: 20px;
+        transition: all 0.3s ease;
+    }
+    .tool-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(0, 255, 65, 0.3);
+    }
+    .tool-card h3 {
+        margin-top: 0;
+        color: #00b8ff;
+    }
+    .tool-card p {
+        font-size: 0.9em;
+        line-height: 1.4;
+    }
+    .btn {
+        display: inline-block;
+        background-color: #00b8ff;
+        color: #0a0a0a;
+        padding: 10px 20px;
+        border-radius: 5px;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+    }
+    .btn:hover {
+        background-color: #00ff41;
+    }
+    #cyberpunk-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+    }
+</style>
+</head>
+<body>
+<svg id="cyberpunk-bg" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+    <defs>
+        <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+            <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#00ff4122" stroke-width="1"/>
+        </pattern>
+    </defs>
+    <rect width="100%" height="100%" fill="url(#grid)" />
+    <g id="circuitLines"></g>
+</svg>
+
+<div class="container">
+    <header>
+        <h1>CyberTool Arsenal</h1>
+        <p>Your Gateway to Secure Internet Browsing</p>
+    </header>
+
+    <div class="tool-grid">
+        <div class="tool-card">
+            <h3>VPN Shield</h3>
+            <p>Encrypt your connection and browse anonymously with our state-of-the-art VPN technology.</p>
+            <a href="https://cybertool-arsenal.com/vpn-shield" class="btn">Activate</a>
+        </div>
+        <div class="tool-card">
+            <h3>Firewall Fortress</h3>
+            <p>Build an impenetrable digital wall to protect your system from malicious attacks.</p>
+            <a href="https://cybertool-arsenal.com/firewall-fortress" class="btn">Configure</a>
+        </div>
+        <div class="tool-card">
+            <h3>Password Vault</h3>
+            <p>Generate and store uncrackable passwords with our secure password manager.</p>
+            <a href="https://cybertool-arsenal.com/password-vault" class="btn">Secure Now</a>
+        </div>
+        <div class="tool-card">
+            <h3>Malware Scanner</h3>
+            <p>Detect and eliminate threats with our advanced malware scanning tool.</p>
+            <a href="https://cybertool-arsenal.com/malware-scanner" class="btn">Scan</a>
+        </div>
+        <div class="tool-card">
+            <h3>Encrypted Messenger</h3>
+            <p>Communicate securely with end-to-end encryption messaging.</p>
+            <a href="https://cybertool-arsenal.com/encrypted-messenger" class="btn">Chat Safely</a>
+        </div>
+        <div class="tool-card">
+            <h3>Ad Blocker Plus</h3>
+            <p>Enhance your browsing speed and security by blocking intrusive ads and trackers.</p>
+            <a href="https://cybertool-arsenal.com/ad-blocker-plus" class="btn">Block Ads</a>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const svg = document.getElementById('cyberpunk-bg');
+    const circuitLines = document.getElementById('circuitLines');
+
+    function createCircuitLine() {
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        const startX = Math.random() * window.innerWidth;
+        const startY = Math.random() * window.innerHeight;
+        let d = `M${startX},${startY}`;
+
+        for (let i = 0; i < 5; i++) {
+            const x = startX + (Math.random() - 0.5) * 200;
+            const y = startY + (Math.random() - 0.5) * 200;
+            d += ` L${x},${y}`;
+        }
+
+        line.setAttribute('d', d);
+        line.setAttribute('stroke', '#00ff41');
+        line.setAttribute('stroke-width', '2');
+        line.setAttribute('fill', 'none');
+
+        return line;
+    }
+
+    function animateCircuitLine(line) {
+        const length = line.getTotalLength();
+        line.style.strokeDasharray = length;
+        line.style.strokeDashoffset = length;
+        line.style.animation = `drawLine 4s linear forwards`;
+    }
+
+    for (let i = 0; i < 10; i++) {
+        const line = createCircuitLine();
+        circuitLines.appendChild(line);
+        animateCircuitLine(line);
+    }
+
+    setInterval(() => {
+        const oldLine = circuitLines.firstChild;
+        if (oldLine) {
+            circuitLines.removeChild(oldLine);
+        }
+        const newLine = createCircuitLine();
+        circuitLines.appendChild(newLine);
+        animateCircuitLine(newLine);
+    }, 4000);
+});
+
+// Add hover effect to tool cards
+document.querySelectorAll('.tool-card').forEach(card => {
+    card.addEventListener('mouseover', function() {
+        this.style.backgroundColor = 'rgba(0, 255, 65, 0.2)';
+    });
+    card.addEventListener('mouseout', function() {
+        this.style.backgroundColor = 'rgba(0, 255, 65, 0.1)';
+    });
+});
+
+// Simple password strength checker for Password Vault
+document.querySelector('a[href$="password-vault"]').addEventListener('click', function(e) {
+    e.preventDefault();
+    const password = prompt("Enter a password to check its strength:");
+    if (password) {
+        let strength = 0;
+        if (password.length >= 8) strength++;
+        if (password.match(/[a-z]/) && password.match(/[A-Z]/)) strength++;
+        if (password.match(/\d/)) strength++;
+        if (password.match(/[^a-zA-Z\d]/)) strength++;
+        
+        let message;
+        switch(strength) {
+            case 0:
+            case 1:
+                message = "Weak password. Please try again.";
+                break;
+            case 2:
+                message = "Moderate password. Could be stronger.";
+                break;
+            case 3:
+                message = "Strong password!";
+                break;
+            case 4:
+                message = "Very strong password!";
+                break;
+        }
+        alert(message);
+    }
+});
+
+// Simulate VPN activation
+document.querySelector('a[href$="vpn-shield"]').addEventListener('click', function(e) {
+    e.preventDefault();
+    alert("VPN activated! Your connection is now secure.");
+    this.textContent = "Deactivate";
+    this.style.backgroundColor = "#ff0000";
+});
+
+// Simulate malware scan
+document.querySelector('a[href$="malware-scanner"]').addEventListener('click', function(e) {
+    e.preventDefault();
+    alert("Scanning system for malware. This may take a few minutes...");
+    setTimeout(() => {
+        alert("Scan complete. No threats detected!");
+    }, 3000);
+});
+</script>
+
+<style>
+@keyframes drawLine {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+</style>
+</body></html>
