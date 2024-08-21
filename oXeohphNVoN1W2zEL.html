@@ -1,0 +1,260 @@
+<html><head><base href="https://cybertool-arsenal.com/firewall-fortress">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Firewall Fortress - CyberTool Arsenal</title>
+<style>
+    body {
+        font-family: 'Roboto', sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #0a0a0a;
+        color: #00ff41;
+        overflow-x: hidden;
+    }
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    header {
+        text-align: center;
+        padding: 40px 0;
+        background: linear-gradient(45deg, #00ff41, #00b8ff);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    h1 {
+        font-size: 3em;
+        margin-bottom: 10px;
+    }
+    .firewall-interface {
+        background-color: rgba(0, 255, 65, 0.1);
+        border: 1px solid #00ff41;
+        border-radius: 8px;
+        padding: 20px;
+        margin-top: 40px;
+    }
+    .firewall-status {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+    .status-indicator {
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background-color: #ff0000;
+    }
+    .status-indicator.active {
+        background-color: #00ff41;
+    }
+    .firewall-controls {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+    }
+    .control-card {
+        background-color: rgba(0, 184, 255, 0.1);
+        border: 1px solid #00b8ff;
+        border-radius: 8px;
+        padding: 15px;
+        transition: all 0.3s ease;
+    }
+    .control-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(0, 184, 255, 0.3);
+    }
+    .btn {
+        display: inline-block;
+        background-color: #00b8ff;
+        color: #0a0a0a;
+        padding: 10px 20px;
+        border-radius: 5px;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+        border: none;
+        cursor: pointer;
+        font-size: 16px;
+    }
+    .btn:hover {
+        background-color: #00ff41;
+    }
+    #network-visualization {
+        width: 100%;
+        height: 300px;
+        margin-top: 40px;
+        border: 1px solid #00ff41;
+        border-radius: 8px;
+    }
+    #log-container {
+        margin-top: 40px;
+        background-color: rgba(0, 255, 65, 0.1);
+        border: 1px solid #00ff41;
+        border-radius: 8px;
+        padding: 20px;
+        height: 200px;
+        overflow-y: auto;
+    }
+    #log-container p {
+        margin: 5px 0;
+        font-family: monospace;
+    }
+</style>
+</head>
+<body>
+<div class="container">
+    <header>
+        <h1>Firewall Fortress</h1>
+        <p>Your Impenetrable Digital Defense</p>
+    </header>
+
+    <div class="firewall-interface">
+        <div class="firewall-status">
+            <h2>Firewall Status</h2>
+            <div>
+                <span id="status-text">Inactive</span>
+                <div class="status-indicator" id="status-indicator"></div>
+            </div>
+        </div>
+        <div class="firewall-controls">
+            <div class="control-card">
+                <h3>Firewall Toggle</h3>
+                <button id="toggle-firewall" class="btn">Activate Firewall</button>
+            </div>
+            <div class="control-card">
+                <h3>Threat Level</h3>
+                <select id="threat-level" class="btn">
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                    <option value="fortress">Fortress Mode</option>
+                </select>
+            </div>
+            <div class="control-card">
+                <h3>Port Management</h3>
+                <button id="manage-ports" class="btn">Configure Ports</button>
+            </div>
+            <div class="control-card">
+                <h3>Update Rules</h3>
+                <button id="update-rules" class="btn">Update Firewall Rules</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="network-visualization"></div>
+
+    <div id="log-container">
+        <h3>Firewall Activity Log</h3>
+        <div id="log-content"></div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const toggleFirewall = document.getElementById('toggle-firewall');
+    const statusIndicator = document.getElementById('status-indicator');
+    const statusText = document.getElementById('status-text');
+    const threatLevel = document.getElementById('threat-level');
+    const managePorts = document.getElementById('manage-ports');
+    const updateRules = document.getElementById('update-rules');
+    const logContent = document.getElementById('log-content');
+
+    let firewallActive = false;
+
+    toggleFirewall.addEventListener('click', function() {
+        firewallActive = !firewallActive;
+        if (firewallActive) {
+            statusIndicator.classList.add('active');
+            statusText.textContent = 'Active';
+            toggleFirewall.textContent = 'Deactivate Firewall';
+            addLog('Firewall activated. Securing all ports...');
+        } else {
+            statusIndicator.classList.remove('active');
+            statusText.textContent = 'Inactive';
+            toggleFirewall.textContent = 'Activate Firewall';
+            addLog('Warning: Firewall deactivated. System vulnerable.');
+        }
+    });
+
+    threatLevel.addEventListener('change', function() {
+        addLog(`Threat level changed to ${this.value}. Adjusting security protocols...`);
+    });
+
+    managePorts.addEventListener('click', function() {
+        const port = prompt('Enter port number to open/close:');
+        if (port) {
+            addLog(`Configuring port ${port}...`);
+            setTimeout(() => addLog(`Port ${port} successfully configured.`), 1000);
+        }
+    });
+
+    updateRules.addEventListener('click', function() {
+        addLog('Updating firewall rules. Please wait...');
+        setTimeout(() => {
+            addLog('Firewall rules updated successfully.');
+            addLog('New rules applied: Block all incoming traffic on ports 1024-65535');
+        }, 2000);
+    });
+
+    function addLog(message) {
+        const log = document.createElement('p');
+        log.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+        logContent.appendChild(log);
+        logContent.scrollTop = logContent.scrollHeight;
+    }
+
+    // Network Visualization
+    const container = document.getElementById('network-visualization');
+    const nodes = new vis.DataSet([
+        { id: 1, label: 'Firewall', color: '#00ff41' },
+        { id: 2, label: 'Internet', color: '#ff0000' },
+        { id: 3, label: 'Local Network', color: '#00b8ff' },
+    ]);
+    const edges = new vis.DataSet([
+        { from: 2, to: 1, arrows: 'to', color: { color: '#ff0000' } },
+        { from: 1, to: 3, arrows: 'to', color: { color: '#00ff41' } },
+    ]);
+    const data = { nodes, edges };
+    const options = {
+        nodes: {
+            shape: 'dot',
+            size: 30,
+            font: {
+                size: 14,
+                color: '#ffffff'
+            },
+            borderWidth: 2,
+            shadow: true
+        },
+        edges: {
+            width: 2,
+            shadow: true
+        },
+        physics: {
+            enabled: false
+        }
+    };
+    const network = new vis.Network(container, data, options);
+
+    function simulateTraffic() {
+        const trafficEdge = { from: 2, to: 1, arrows: 'to', color: { color: '#ffff00' } };
+        edges.add(trafficEdge);
+        setTimeout(() => {
+            edges.remove(trafficEdge.id);
+            if (firewallActive) {
+                addLog('Incoming traffic blocked by firewall.');
+            } else {
+                const passedTrafficEdge = { from: 1, to: 3, arrows: 'to', color: { color: '#ffff00' } };
+                edges.add(passedTrafficEdge);
+                setTimeout(() => edges.remove(passedTrafficEdge.id), 500);
+                addLog('Warning: Unfiltered traffic passed through to local network.');
+            }
+        }, 500);
+    }
+
+    setInterval(simulateTraffic, 3000);
+});
+</script>
+</body></html>
